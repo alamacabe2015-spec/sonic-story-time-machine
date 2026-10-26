@@ -65,7 +65,7 @@ export const refreshNews = createServerFn({ method: "POST" })
     if (!res.ok) return { added: 0 };
     const xml = await res.text();
     const rows = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].slice(0, 40).map(([, it]) => {
-      const get = (tag: string) => decode(it.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`))?.[1] ?? "");
+      const get = (tag: string) => decode((it ?? "").match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`))?.[1] ?? "");
       const source = get("source");
       let title = get("title");
       if (source && title.endsWith(` - ${source}`)) title = title.slice(0, -(source.length + 3));
@@ -73,6 +73,6 @@ export const refreshNews = createServerFn({ method: "POST" })
     }).filter((r) => r.title && r.url);
     if (!rows.length) return { added: 0 };
     await supabaseAdmin.from("news").upsert(rows, { onConflict: "url", ignoreDuplicates: true });
-    await supabaseAdmin.from("news").update({ fetched_at: new Date().toISOString() }).eq("url", rows[0].url);
+    await supabaseAdmin.from("news").update({ fetched_at: new Date().toISOString() }).eq("url", rows[0]!.url);
     return { added: rows.length };
   });
