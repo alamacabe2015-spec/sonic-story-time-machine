@@ -81,6 +81,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "theme-color", content: "#1d4ed8" },
+      { name: "robots", content: "noindex, nofollow" },
       { name: "apple-mobile-web-app-title", content: "Sonic News" },
       { title: "Sonic News" },
       { name: "description", content: "Noticias de Sonic, máquina del tiempo y chat con amigos." },
