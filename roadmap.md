@@ -1,0 +1,8 @@
+# Sonic News roadmap
+- [x] Base de datos, cuentas por usuario
+- [x] Pantalla de bienvenida / crear cuenta / ya tengo cuenta (botón "Entrar")
+- [x] Sesión recordada (no volver a poner usuario y contraseña)
+- [x] Noticias en tiempo real
+- [x] Mi cuenta (foto, usuario, fecha, biografía, cambiar cuenta, borrar cuenta)
+- [x] Máquina del tiempo (1991 → año actual, noticias en español)
+- [x] Amigos y chat (solicitudes, punto rojo, chat con emojis Sonic)

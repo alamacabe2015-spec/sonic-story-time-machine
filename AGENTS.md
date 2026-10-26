@@ -8,3 +8,8 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Project rules
+- Accounts use username login mapped to a synthetic email (`<username>@sonicnews.app`, see src/lib/sonic.ts) with auto-confirm; never send auth emails.
+- Avatars are stored as small JPEG data URLs in `profiles.avatar_url` because public storage buckets are blocked in this workspace.
+- Time-machine news is AI-generated server-side and cached per year in `year_news`; the year range is computed from the current date, never hardcoded.
