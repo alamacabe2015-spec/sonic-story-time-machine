@@ -23,11 +23,12 @@ export function AuthScreen({ initialMode = "signup" }: { initialMode?: "signup" 
     if (mode === "signup") {
       const { data: taken } = await supabase.from("profiles").select("id").eq("username", u).maybeSingle();
       if (taken) { setBusy(false); return toast.error("Ese usuario ya existe"); }
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email: toEmail(u), password,
-        options: { data: { username: u, display_name: name.trim(), avatar_url: avatar } },
+        options: { data: { username: u, display_name: name.trim() } },
       });
       if (error) toast.error(error.message.includes("registered") ? "Ese usuario ya existe" : "No se pudo crear la cuenta");
+      else if (avatar && data.user) await supabase.from("profiles").update({ avatar_url: avatar }).eq("id", data.user.id);
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email: toEmail(u), password });
       if (error) toast.error("Usuario o contraseña incorrectos");
