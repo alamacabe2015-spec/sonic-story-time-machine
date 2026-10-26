@@ -14,15 +14,15 @@ export function AuthScreen({ initialMode = "signup" }: { initialMode?: "signup" 
   const [busy, setBusy] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  async function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent): Promise<void> {
     e.preventDefault();
     const u = normalizeUsername(username);
-    if (u.length < 3) return toast.error("El usuario debe tener al menos 3 letras (sin espacios)");
-    if (password.length < 6) return toast.error("La contraseña debe tener al menos 6 caracteres");
+    if (u.length < 3) { toast.error("El usuario debe tener al menos 3 letras (sin espacios)"); return; }
+    if (password.length < 6) { toast.error("La contraseña debe tener al menos 6 caracteres"); return; }
     setBusy(true);
     if (mode === "signup") {
       const { data: taken } = await supabase.from("profiles").select("id").eq("username", u).maybeSingle();
-      if (taken) { setBusy(false); return toast.error("Ese usuario ya existe"); }
+      if (taken) { setBusy(false); { toast.error("Ese usuario ya existe"); return; } }
       const { data, error } = await supabase.auth.signUp({
         email: toEmail(u), password,
         options: { data: { username: u, display_name: name.trim() } },

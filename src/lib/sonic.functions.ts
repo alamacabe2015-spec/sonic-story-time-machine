@@ -32,7 +32,7 @@ export const getYearNews = createServerFn({ method: "POST" })
 
     const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.LOVABLE_API_KEY}` },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env["LOVABLE_API_KEY"]}` },
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
         messages: [
