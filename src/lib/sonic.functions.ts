@@ -48,3 +48,31 @@ export const getYearNews = createServerFn({ method: "POST" })
     await supabaseAdmin.from("year_news").upsert({ year: data.year, items, created_at: new Date().toISOString() });
     return items;
   });
+
+const decode = (s: string) =>
+  s.replace(/<!\[CDATA\[|\]\]>/g, "").replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/<[^>]+>/g, "").trim();
+
+/** Pulls the latest real Sonic headlines (Spanish) into the news table. Throttled to every 15 min. */
+export const refreshNews = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async () => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: last } = await supabaseAdmin.from("news").select("fetched_at").not("url", "is", null)
+      .order("fetched_at", { ascending: false }).limit(1).maybeSingle();
+    if (last && Date.now() - new Date(last.fetched_at).getTime() < 15 * 60 * 1000) return { added: 0 };
+
+    const res = await fetch("https://news.google.com/rss/search?q=Sonic+the+Hedgehog+when:60d&hl=es&gl=ES&ceid=ES:es");
+    if (!res.ok) return { added: 0 };
+    const xml = await res.text();
+    const rows = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].slice(0, 40).map(([, it]) => {
+      const get = (tag: string) => decode(it.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`))?.[1] ?? "");
+      const source = get("source");
+      let title = get("title");
+      if (source && title.endsWith(` - ${source}`)) title = title.slice(0, -(source.length + 3));
+      return { title, summary: source ? `Fuente: ${source}` : "", url: get("link"), source, published_at: new Date(get("pubDate") || Date.now()).toISOString(), fetched_at: new Date().toISOString() };
+    }).filter((r) => r.title && r.url);
+    if (!rows.length) return { added: 0 };
+    await supabaseAdmin.from("news").upsert(rows, { onConflict: "url", ignoreDuplicates: true });
+    await supabaseAdmin.from("news").update({ fetched_at: new Date().toISOString() }).eq("url", rows[0].url);
+    return { added: rows.length };
+  });
