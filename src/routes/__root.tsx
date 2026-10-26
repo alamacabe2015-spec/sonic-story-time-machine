@@ -80,6 +80,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "theme-color", content: "#1d4ed8" },
+      { name: "apple-mobile-web-app-title", content: "Sonic News" },
       { title: "Sonic News" },
       { name: "description", content: "Noticias de Sonic, máquina del tiempo y chat con amigos." },
       { property: "og:type", content: "website" },
@@ -90,6 +92,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&family=Russo+One&display=swap" },
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: sonicFace, type: "image/png" },
+      { rel: "manifest", href: "/manifest.webmanifest" },
+      { rel: "apple-touch-icon", href: "/icon.png" },
     ],
   }),
   shellComponent: RootShell,
