@@ -8,6 +8,13 @@
       "when": 1793039462256,
       "tag": "0000_sonic_news_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793039982230,
+      "tag": "0001_news_sources",
+      "breakpoints": true
     }
   ]
 }

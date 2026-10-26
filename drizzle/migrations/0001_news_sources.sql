@@ -1,0 +1,1 @@
+ALTER TABLE public.news ADD COLUMN url text UNIQUE, ADD COLUMN source text, ADD COLUMN fetched_at timestamptz NOT NULL DEFAULT now();

@@ -64,22 +64,31 @@ export type Database = {
       }
       news: {
         Row: {
+          fetched_at: string
           id: string
           published_at: string
+          source: string | null
           summary: string
           title: string
+          url: string | null
         }
         Insert: {
+          fetched_at?: string
           id?: string
           published_at?: string
+          source?: string | null
           summary: string
           title: string
+          url?: string | null
         }
         Update: {
+          fetched_at?: string
           id?: string
           published_at?: string
+          source?: string | null
           summary?: string
           title?: string
+          url?: string | null
         }
         Relationships: []
       }
