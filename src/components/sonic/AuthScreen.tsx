@@ -39,7 +39,7 @@ export function AuthScreen({ initialMode = "signup" }: { initialMode?: "signup" 
   const input = "w-full rounded-xl border-2 border-input bg-card px-4 py-3 text-base font-semibold outline-none focus:border-primary";
 
   return (
-    <div className="min-h-screen bg-sky zigzag flex flex-col items-center justify-center px-5 py-10">
+    <div className="min-h-screen bg-sky flex flex-col items-center justify-center px-5 py-10">
       <img src={sonicFace} alt="Sonic" width={816} height={816} className="w-28 h-28 drop-shadow-xl animate-bounce" />
       <h1 className="mt-2 text-4xl text-primary-foreground tracking-wide">SONIC NEWS</h1>
       <p className="mt-1 text-xl font-extrabold text-secondary">¡Bienvenido, fan de Sonic!</p>
