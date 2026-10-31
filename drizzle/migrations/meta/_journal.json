@@ -15,6 +15,13 @@
       "when": 1793039982230,
       "tag": "0001_news_sources",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793464592235,
+      "tag": "0002_sonic_games_rewards",
+      "breakpoints": true
     }
   ]
 }

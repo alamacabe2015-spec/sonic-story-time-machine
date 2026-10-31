@@ -38,6 +38,21 @@ export type Database = {
         }
         Relationships: []
       }
+      game_wallets: {
+        Row: {
+          coins: number
+          user_id: string
+        }
+        Insert: {
+          coins?: number
+          user_id: string
+        }
+        Update: {
+          coins?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           content: string
@@ -92,12 +107,36 @@ export type Database = {
         }
         Relationships: []
       }
+      owned_titles: {
+        Row: {
+          title_id: string
+          user_id: string
+        }
+        Insert: {
+          title_id: string
+          user_id: string
+        }
+        Update: {
+          title_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "owned_titles_title_id_fkey"
+            columns: ["title_id"]
+            isOneToOne: false
+            referencedRelation: "sonic_titles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
           bio: string
           created_at: string
           display_name: string
+          equipped_title: string | null
           id: string
           username: string
         }
@@ -106,6 +145,7 @@ export type Database = {
           bio?: string
           created_at?: string
           display_name?: string
+          equipped_title?: string | null
           id: string
           username: string
         }
@@ -114,8 +154,87 @@ export type Database = {
           bio?: string
           created_at?: string
           display_name?: string
+          equipped_title?: string | null
           id?: string
           username?: string
+        }
+        Relationships: []
+      }
+      quiz_questions: {
+        Row: {
+          answer: number
+          explanation: string
+          id: string
+          image_key: string | null
+          options: Json
+          prompt: string
+        }
+        Insert: {
+          answer: number
+          explanation: string
+          id: string
+          image_key?: string | null
+          options: Json
+          prompt: string
+        }
+        Update: {
+          answer?: number
+          explanation?: string
+          id?: string
+          image_key?: string | null
+          options?: Json
+          prompt?: string
+        }
+        Relationships: []
+      }
+      quiz_sessions: {
+        Row: {
+          correct: number
+          created_at: string
+          id: string
+          position: number
+          question_ids: string[]
+          user_id: string
+        }
+        Insert: {
+          correct?: number
+          created_at?: string
+          id?: string
+          position?: number
+          question_ids: string[]
+          user_id: string
+        }
+        Update: {
+          correct?: number
+          created_at?: string
+          id?: string
+          position?: number
+          question_ids?: string[]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      sonic_titles: {
+        Row: {
+          character: string
+          id: string
+          name: string
+          price: number
+          rarity: string
+        }
+        Insert: {
+          character: string
+          id: string
+          name: string
+          price: number
+          rarity: string
+        }
+        Update: {
+          character?: string
+          id?: string
+          name?: string
+          price?: number
+          rarity?: string
         }
         Relationships: []
       }
@@ -142,7 +261,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      answer_sonic_quiz: {
+        Args: { choice: number; expected_position: number; session_id: string }
+        Returns: Json
+      }
+      equip_sonic_title: {
+        Args: { title_id_input: string }
+        Returns: undefined
+      }
+      redeem_sonic_title: { Args: { title_id_input: string }; Returns: number }
+      start_sonic_quiz: { Args: never; Returns: Json }
     }
     Enums: {
       [_ in never]: never
