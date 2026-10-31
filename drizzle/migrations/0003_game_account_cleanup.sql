@@ -1,0 +1,3 @@
+ALTER TABLE public.game_wallets ADD CONSTRAINT game_wallet_profile FOREIGN KEY(user_id) REFERENCES public.profiles(id) ON DELETE CASCADE NOT VALID;
+ALTER TABLE public.owned_titles ADD CONSTRAINT owned_title_profile FOREIGN KEY(user_id) REFERENCES public.profiles(id) ON DELETE CASCADE NOT VALID;
+ALTER TABLE public.quiz_sessions ADD CONSTRAINT quiz_session_profile FOREIGN KEY(user_id) REFERENCES public.profiles(id) ON DELETE CASCADE NOT VALID;
