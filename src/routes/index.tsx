@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
-import { Clock, Newspaper, User, Users } from "lucide-react";
+import { Clock, Coins, Gamepad2, Newspaper, ShoppingBag, User, Users } from "lucide-react";
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { AuthScreen } from "@/components/sonic/AuthScreen";
@@ -10,14 +10,17 @@ import { TimeMachineTab } from "@/components/sonic/TimeMachineTab";
 import { FriendsTab } from "@/components/sonic/FriendsTab";
 import type { Friendship, Profile } from "@/components/sonic/types";
 import sonicFace from "@/assets/sonic-face.png";
+import { Button } from "@/components/ui/button";
+import { GamesTab } from "@/components/sonic/GamesTab";
+import { ShopTab } from "@/components/sonic/ShopTab";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Sonic News — Bienvenido, fan de Sonic" },
-      { name: "description", content: "Noticias de Sonic al momento, máquina del tiempo desde 1991 y chat con tus amigos." },
+      { name: "description", content: "Noticias de Sonic, máquina del tiempo, chat, test de personajes y tienda de títulos con monedas." },
       { property: "og:title", content: "Sonic News" },
-      { property: "og:description", content: "Noticias de Sonic, máquina del tiempo y chat con amigos." },
+      { property: "og:description", content: "Noticias, amigos, juegos de Sonic y títulos para tu perfil." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -25,7 +28,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-type Tab = "news" | "account" | "time" | "friends";
+type Tab = "news" | "account" | "time" | "friends" | "games" | "shop";
 
 function Index() {
   const [session, setSession] = useState<Session | null | undefined>(undefined);
@@ -46,6 +49,11 @@ function MainApp({ userId }: { userId: string }) {
   const [me, setMe] = useState<Profile | null>(null);
   const [friendships, setFriendships] = useState<Friendship[]>([]);
   const [people, setPeople] = useState<Record<string, Profile>>({});
+  const [coins, setCoins] = useState(0);
+
+  const loadCoins = useCallback(() => {
+    supabase.from("game_wallets").select("coins").eq("user_id", userId).maybeSingle().then(({ data }) => setCoins(data?.coins ?? 0));
+  }, [userId]);
 
   const loadMe = useCallback(() => {
     supabase.from("profiles").select("*").eq("id", userId).maybeSingle().then(({ data }) => setMe(data));
@@ -63,11 +71,11 @@ function MainApp({ userId }: { userId: string }) {
   }, []);
 
   useEffect(() => {
-    loadMe(); loadFriends();
+    loadMe(); loadFriends(); loadCoins();
     const ch = supabase.channel(`fr-${Math.random().toString(36).slice(2)}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "friendships" }, () => loadFriends()).subscribe();
     return () => { supabase.removeChannel(ch); };
-  }, [loadMe, loadFriends]);
+  }, [loadMe, loadFriends, loadCoins]);
 
   const pending = friendships.filter((f) => f.status === "pending" && f.addressee === userId).length;
 
@@ -82,6 +90,8 @@ function MainApp({ userId }: { userId: string }) {
     { id: "account", label: "Mi cuenta", icon: User },
     { id: "time", label: "Máquina del tiempo", icon: Clock },
     { id: "friends", label: "Amigos y chat", icon: Users, dot: pending > 0 },
+    { id: "games", label: "Juegos", icon: Gamepad2 },
+    { id: "shop", label: "Tienda", icon: ShoppingBag },
   ];
 
   return (
@@ -92,21 +102,24 @@ function MainApp({ userId }: { userId: string }) {
           {pending > 0 && <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-accent ring-2 ring-primary-foreground" />}
         </div>
         <h1 className="text-2xl text-primary-foreground">SONIC NEWS</h1>
+        <span className="ml-auto flex items-center gap-1 font-extrabold text-primary-foreground" aria-label={`${coins} monedas`}><Coins className="h-5 w-5 text-ring-gold" />{coins}</span>
       </header>
       <main className="mx-auto max-w-xl p-4">
         {tab === "news" && <NewsTab />}
         {tab === "account" && <AccountTab profile={me} onChange={loadMe} />}
         {tab === "time" && <TimeMachineTab />}
         {tab === "friends" && <FriendsTab me={me} friendships={friendships} people={people} reload={loadFriends} />}
+        {tab === "games" && <GamesTab coins={coins} onReward={loadCoins} onShop={() => setTab("shop")} />}
+        {tab === "shop" && <ShopTab coins={coins} equipped={me.equipped_title ?? null} userId={userId} onChange={() => { loadCoins(); loadMe(); loadFriends(); }} />}
       </main>
-      <nav className="fixed bottom-0 inset-x-0 z-30 bg-card border-t-4 border-primary grid grid-cols-4">
+      <nav className="fixed bottom-0 inset-x-0 z-30 bg-card border-t-4 border-primary grid grid-cols-6 pb-[env(safe-area-inset-bottom)]">
         {tabs.map((t) => (
-          <button key={t.id} onClick={() => setTab(t.id)}
-            className={`relative flex flex-col items-center gap-1 py-2 text-[11px] font-extrabold ${tab === t.id ? "text-primary" : "text-muted-foreground"}`}>
+          <Button variant="ghost" key={t.id} onClick={() => setTab(t.id)} aria-label={t.label} aria-current={tab === t.id ? "page" : undefined}
+            className={`relative h-20 min-w-0 rounded-none flex flex-col items-center justify-start gap-1 px-1 py-2 text-[10px] leading-tight whitespace-normal font-extrabold ${tab === t.id ? "text-primary" : "text-muted-foreground"}`}>
             <t.icon className="h-6 w-6" />
             {t.label}
             {t.dot && <span className="absolute top-1 right-1/4 h-3 w-3 rounded-full bg-accent" />}
-          </button>
+          </Button>
         ))}
       </nav>
     </div>

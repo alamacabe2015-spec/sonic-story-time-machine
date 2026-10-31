@@ -41,6 +41,7 @@ export function AccountTab({ profile, onChange }: { profile: Profile; onChange: 
         <input ref={fileRef} type="file" accept="image/*" hidden
           onChange={async (e) => { const f = e.target.files?.[0]; if (f) save({ avatar_url: await fileToAvatar(f) }); }} />
         <p className="text-xl font-extrabold">{profile.display_name || profile.username}</p>
+        {profile.equipped_title && <p className="text-sm font-extrabold text-primary text-center">✦ {profile.equipped_title}</p>}
         <dl className="w-full text-sm space-y-1 mt-2">
           <div className="flex justify-between"><dt className="text-muted-foreground">Usuario</dt><dd className="font-bold">@{profile.username}</dd></div>
           <div className="flex justify-between"><dt className="text-muted-foreground">Contraseña</dt><dd className="font-bold">••••••••</dd></div>

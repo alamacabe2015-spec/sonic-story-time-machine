@@ -32,7 +32,7 @@ export function FriendsTab({ me, friendships, people, reload }: Props) {
         {friends.map((f) => { const p = other(f); if (!p) return null; return (
           <li key={f.id}>
             <button onClick={() => setChatWith(p)} className="w-full flex items-center gap-3 rounded-2xl bg-card p-3 text-left">
-              <Avatar profile={p} /><div><p className="font-extrabold">{p.display_name || p.username}</p><p className="text-xs text-muted-foreground">@{p.username} · Toca para chatear</p></div>
+              <Avatar profile={p} /><div><p className="font-extrabold">{p.display_name || p.username}</p>{p.equipped_title && <p className="text-xs font-extrabold text-primary">✦ {p.equipped_title}</p>}<p className="text-xs text-muted-foreground">@{p.username} · Toca para chatear</p></div>
             </button>
           </li>); })}
       </ul>
@@ -125,7 +125,7 @@ function Chat({ me, friend, onBack }: { me: Profile; friend: Profile; onBack: ()
       <header className="flex items-center gap-3 bg-primary p-3 text-primary-foreground">
         <button onClick={onBack} aria-label="Volver"><ArrowLeft /></button>
         <Avatar profile={friend} size="sm" />
-        <p className="font-extrabold">{friend.display_name || friend.username}</p>
+        <div className="min-w-0"><p className="font-extrabold">{friend.display_name || friend.username}</p>{friend.equipped_title && <p className="text-xs break-words">✦ {friend.equipped_title}</p>}</div>
       </header>
       <div className="flex-1 overflow-y-auto zigzag p-3 space-y-2">
         {msgs.map((m) => { const mine = m.sender === me.id; return (
