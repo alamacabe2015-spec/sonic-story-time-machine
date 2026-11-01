@@ -12,3 +12,4 @@
 - [ ] Ampliar juegos con cuatro dificultades y más preguntas
 - [ ] Añadir colores, letras y avatares comprables y equipables
 - [ ] Verificar juegos, compras y apariencia guardada
+- [ ] Actualizar noticias automáticamente con la aplicación cerrada
