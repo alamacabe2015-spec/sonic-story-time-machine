@@ -110,7 +110,7 @@ function MainApp({ userId }: { userId: string }) {
         {tab === "time" && <TimeMachineTab />}
         {tab === "friends" && <FriendsTab me={me} friendships={friendships} people={people} reload={loadFriends} />}
         {tab === "games" && <GamesTab coins={coins} onReward={loadCoins} onShop={() => setTab("shop")} />}
-        {tab === "shop" && <ShopTab coins={coins} equipped={me.equipped_title ?? null} userId={userId} onChange={() => { loadCoins(); loadMe(); loadFriends(); }} />}
+         {tab === "shop" && <ShopTab coins={coins} equipped={me.equipped_title ?? null} userId={userId} profile={me} onChange={() => { loadCoins(); loadMe(); loadFriends(); }} />}
       </main>
       <nav className="fixed bottom-0 inset-x-0 z-30 bg-card border-t-4 border-primary grid grid-cols-6 pb-[env(safe-area-inset-bottom)]">
         {tabs.map((t) => (
