@@ -6,6 +6,8 @@ import { deleteMyAccount } from "@/lib/sonic.functions";
 import { fileToAvatar, normalizeUsername, toEmail } from "@/lib/sonic";
 import type { Profile } from "./types";
 import { Avatar } from "./Avatar";
+import { ProfileName } from "./ProfileName";
+import { Button } from "@/components/ui/button";
 
 export function AccountTab({ profile, onChange }: { profile: Profile; onChange: () => void }) {
   const [bio, setBio] = useState(profile.bio);
@@ -37,10 +39,10 @@ export function AccountTab({ profile, onChange }: { profile: Profile; onChange: 
     <div className="space-y-5">
       <h2 className="text-2xl text-primary">Mi cuenta</h2>
       <div className="rounded-2xl bg-card p-5 flex flex-col items-center gap-2">
-        <button onClick={() => fileRef.current?.click()} aria-label="Cambiar foto"><Avatar profile={profile} size="xl" /></button>
+        <Button variant="ghost" className="h-auto rounded-full p-0" onClick={() => fileRef.current?.click()} aria-label="Cambiar foto"><Avatar profile={profile} size="xl" /></Button>
         <input ref={fileRef} type="file" accept="image/*" hidden
-          onChange={async (e) => { const f = e.target.files?.[0]; if (f) save({ avatar_url: await fileToAvatar(f) }); }} />
-        <p className="text-xl font-extrabold">{profile.display_name || profile.username}</p>
+          onChange={async (e) => { const f = e.target.files?.[0]; if (f) save({ avatar_url: await fileToAvatar(f), avatar_cosmetic: null }); }} />
+        <p className="text-xl font-extrabold max-w-full text-center"><ProfileName profile={profile} /></p>
         {profile.equipped_title && <p className="text-sm font-extrabold text-primary text-center">✦ {profile.equipped_title}</p>}
         <dl className="w-full text-sm space-y-1 mt-2">
           <div className="flex justify-between"><dt className="text-muted-foreground">Usuario</dt><dd className="font-bold">@{profile.username}</dd></div>

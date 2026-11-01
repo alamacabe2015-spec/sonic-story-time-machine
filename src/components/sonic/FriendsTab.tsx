@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { SONIC_STICKERS, normalizeUsername } from "@/lib/sonic";
 import { Avatar } from "./Avatar";
 import type { Friendship, Message, Profile } from "./types";
+import { ProfileName } from "./ProfileName";
 
 type Props = { me: Profile; friendships: Friendship[]; people: Record<string, Profile>; reload: () => void };
 
@@ -32,7 +33,7 @@ export function FriendsTab({ me, friendships, people, reload }: Props) {
         {friends.map((f) => { const p = other(f); if (!p) return null; return (
           <li key={f.id}>
             <button onClick={() => setChatWith(p)} className="w-full flex items-center gap-3 rounded-2xl bg-card p-3 text-left">
-              <Avatar profile={p} /><div><p className="font-extrabold">{p.display_name || p.username}</p>{p.equipped_title && <p className="text-xs font-extrabold text-primary">✦ {p.equipped_title}</p>}<p className="text-xs text-muted-foreground">@{p.username} · Toca para chatear</p></div>
+              <Avatar profile={p} /><div className="min-w-0"><p className="font-extrabold"><ProfileName profile={p} /></p>{p.equipped_title && <p className="text-xs font-extrabold text-primary">✦ {p.equipped_title}</p>}<p className="text-xs text-muted-foreground">@{p.username} · Toca para chatear</p></div>
             </button>
           </li>); })}
       </ul>
@@ -83,7 +84,7 @@ function AddFriend({ me, friendships, reload }: { me: Profile; friendships: Frie
         className="w-full rounded-xl border-2 border-input px-4 py-2 font-semibold outline-none focus:border-primary" />
       {results.map((p) => { const s = status(p.id); return (
         <div key={p.id} className="flex items-center gap-3">
-          <Avatar profile={p} size="sm" /><p className="flex-1 font-bold">{p.display_name || p.username} <span className="text-xs text-muted-foreground">@{p.username}</span></p>
+          <Avatar profile={p} size="sm" /><p className="flex-1 min-w-0 font-bold"><ProfileName profile={p} /> <span className="text-xs text-muted-foreground">@{p.username}</span></p>
           {s ? <span className="text-xs font-bold text-muted-foreground">{s === "accepted" ? "Amigos" : "Pendiente"}</span>
              : <button onClick={() => send(p)} className="rounded-lg bg-primary px-3 py-1 text-sm font-extrabold text-primary-foreground">Enviar</button>}
         </div>); })}
@@ -125,7 +126,7 @@ function Chat({ me, friend, onBack }: { me: Profile; friend: Profile; onBack: ()
       <header className="flex items-center gap-3 bg-primary p-3 text-primary-foreground">
         <button onClick={onBack} aria-label="Volver"><ArrowLeft /></button>
         <Avatar profile={friend} size="sm" />
-        <div className="min-w-0"><p className="font-extrabold">{friend.display_name || friend.username}</p>{friend.equipped_title && <p className="text-xs break-words">✦ {friend.equipped_title}</p>}</div>
+        <div className="min-w-0"><p className="font-extrabold"><ProfileName profile={friend} /></p>{friend.equipped_title && <p className="text-xs break-words">✦ {friend.equipped_title}</p>}</div>
       </header>
       <div className="flex-1 overflow-y-auto zigzag p-3 space-y-2">
         {msgs.map((m) => { const mine = m.sender === me.id; return (

@@ -15,3 +15,6 @@
 - Time-machine news is AI-generated server-side and cached per year in `year_news`; the year range is computed from the current date, never hardcoded.
 - Quiz answers remain in protected database tables; authenticated transactional RPCs award coins once per answer and atomically redeem owned titles, preventing replay and overspending.
 - Games and shop use separate Sonic tab components; equipped titles are read from profiles so account, friend lists and chats display the same selection.
+- Quiz sessions persist their difficulty and per-answer reward server-side; the client never determines payouts.
+- Cosmetics are protected purchases with ownership validation on profile updates; shared Avatar and ProfileName rendering keeps appearances consistent.
+- News ingestion is shared in a server-only helper by authenticated refresh and a cron-authenticated public route, so scheduled updates do not depend on an open browser.

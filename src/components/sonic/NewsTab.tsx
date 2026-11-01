@@ -3,21 +3,23 @@ import { useServerFn } from "@tanstack/react-start";
 import { ExternalLink } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { refreshNews } from "@/lib/sonic.functions";
+import { Button } from "@/components/ui/button";
 
 type News = { id: string; title: string; summary: string; published_at: string; url: string | null };
 
 export function NewsTab() {
   const [news, setNews] = useState<News[]>([]);
+  const [limit, setLimit] = useState(60);
   const refresh = useServerFn(refreshNews);
   useEffect(() => {
-    const load = () => supabase.from("news").select("*").order("published_at", { ascending: false }).limit(60).then(({ data }) => setNews(data ?? []));
+    const load = () => supabase.from("news").select("*").order("published_at", { ascending: false }).limit(limit).then(({ data }) => setNews(data ?? []));
     load();
     refresh().then(load).catch(() => {});
     const timer = setInterval(() => refresh().catch(() => {}), 15 * 60 * 1000);
     const ch = supabase.channel(`news-${Math.random().toString(36).slice(2)}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "news" }, load).subscribe();
     return () => { clearInterval(timer); supabase.removeChannel(ch); };
-  }, [refresh]);
+  }, [refresh, limit]);
   return (
     <div className="space-y-4">
       <h2 className="text-2xl text-primary">Noticias recientes</h2>
@@ -34,6 +36,7 @@ export function NewsTab() {
         </article>
       ))}
       {news.length === 0 && <p className="text-muted-foreground">Cargando noticias...</p>}
+      {news.length >= limit && <Button variant="outline" className="w-full" onClick={() => setLimit((v) => v + 60)}>Más noticias</Button>}
     </div>
   );
 }
