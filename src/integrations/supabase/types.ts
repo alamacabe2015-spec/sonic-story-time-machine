@@ -115,6 +115,36 @@ export type Database = {
         }
         Relationships: []
       }
+      owned_cosmetics: {
+        Row: {
+          cosmetic_id: string
+          user_id: string
+        }
+        Insert: {
+          cosmetic_id: string
+          user_id: string
+        }
+        Update: {
+          cosmetic_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "owned_cosmetics_cosmetic_id_fkey"
+            columns: ["cosmetic_id"]
+            isOneToOne: false
+            referencedRelation: "sonic_cosmetics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "owned_cosmetics_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       owned_titles: {
         Row: {
           title_id: string
@@ -147,30 +177,39 @@ export type Database = {
       }
       profiles: {
         Row: {
+          avatar_cosmetic: string | null
           avatar_url: string | null
           bio: string
           created_at: string
           display_name: string
           equipped_title: string | null
           id: string
+          name_color: string | null
+          name_font: string | null
           username: string
         }
         Insert: {
+          avatar_cosmetic?: string | null
           avatar_url?: string | null
           bio?: string
           created_at?: string
           display_name?: string
           equipped_title?: string | null
           id: string
+          name_color?: string | null
+          name_font?: string | null
           username: string
         }
         Update: {
+          avatar_cosmetic?: string | null
           avatar_url?: string | null
           bio?: string
           created_at?: string
           display_name?: string
           equipped_title?: string | null
           id?: string
+          name_color?: string | null
+          name_font?: string | null
           username?: string
         }
         Relationships: []
@@ -178,6 +217,7 @@ export type Database = {
       quiz_questions: {
         Row: {
           answer: number
+          difficulty: string
           explanation: string
           id: string
           image_key: string | null
@@ -186,6 +226,7 @@ export type Database = {
         }
         Insert: {
           answer: number
+          difficulty?: string
           explanation: string
           id: string
           image_key?: string | null
@@ -194,6 +235,7 @@ export type Database = {
         }
         Update: {
           answer?: number
+          difficulty?: string
           explanation?: string
           id?: string
           image_key?: string | null
@@ -207,24 +249,30 @@ export type Database = {
           correct: number
           created_at: string
           id: string
+          mode: string
           position: number
           question_ids: string[]
+          reward: number
           user_id: string
         }
         Insert: {
           correct?: number
           created_at?: string
           id?: string
+          mode?: string
           position?: number
           question_ids: string[]
+          reward?: number
           user_id: string
         }
         Update: {
           correct?: number
           created_at?: string
           id?: string
+          mode?: string
           position?: number
           question_ids?: string[]
+          reward?: number
           user_id?: string
         }
         Relationships: [
@@ -236,6 +284,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      sonic_cosmetics: {
+        Row: {
+          category: string
+          id: string
+          name: string
+          price: number
+          rarity: string
+        }
+        Insert: {
+          category: string
+          id: string
+          name: string
+          price: number
+          rarity?: string
+        }
+        Update: {
+          category?: string
+          id?: string
+          name?: string
+          price?: number
+          rarity?: string
+        }
+        Relationships: []
       }
       sonic_titles: {
         Row: {
@@ -288,12 +360,18 @@ export type Database = {
         Args: { choice: number; expected_position: number; session_id: string }
         Returns: Json
       }
+      equip_sonic_cosmetic: {
+        Args: { item_id: string; kind: string }
+        Returns: undefined
+      }
       equip_sonic_title: {
         Args: { title_id_input: string }
         Returns: undefined
       }
+      redeem_sonic_cosmetic: { Args: { item_id: string }; Returns: number }
       redeem_sonic_title: { Args: { title_id_input: string }; Returns: number }
       start_sonic_quiz: { Args: never; Returns: Json }
+      start_sonic_quiz_mode: { Args: { selected_mode: string }; Returns: Json }
     }
     Enums: {
       [_ in never]: never
