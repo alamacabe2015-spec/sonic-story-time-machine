@@ -6,6 +6,9 @@
 - [x] Mi cuenta (foto, usuario, fecha, biografía, cambiar cuenta, borrar cuenta)
 - [x] Máquina del tiempo (1991 → año actual, noticias en español)
 - [x] Amigos y chat (solicitudes, punto rojo, chat con emojis Sonic)
-- [ ] Juegos: test de preguntas e imágenes con monedas guardadas
-- [ ] Tienda: canjear monedas por títulos y mostrarlos bajo el nombre
-- [ ] Comprobar partida, compra y título equipado
+- [x] Juegos: test de preguntas e imágenes con monedas guardadas
+- [x] Tienda: canjear monedas por títulos y mostrarlos bajo el nombre
+- [x] Comprobar partida, compra y título equipado
+- [ ] Ampliar juegos con cuatro dificultades y más preguntas
+- [ ] Añadir colores, letras y avatares comprables y equipables
+- [ ] Verificar juegos, compras y apariencia guardada
