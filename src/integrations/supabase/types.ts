@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          code: string
+          description: string
+          icon: string
+          name: string
+          sort: number
+        }
+        Insert: {
+          code: string
+          description: string
+          icon: string
+          name: string
+          sort: number
+        }
+        Update: {
+          code?: string
+          description?: string
+          icon?: string
+          name?: string
+          sort?: number
+        }
+        Relationships: []
+      }
       friendships: {
         Row: {
           addressee: string
@@ -214,6 +238,41 @@ export type Database = {
         }
         Relationships: []
       }
+      push_subscriptions: {
+        Row: {
+          auth: string
+          created_at: string
+          endpoint: string
+          id: string
+          p256dh: string
+          user_id: string
+        }
+        Insert: {
+          auth: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          p256dh: string
+          user_id: string
+        }
+        Update: {
+          auth?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          p256dh?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "push_subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       quiz_questions: {
         Row: {
           answer: number
@@ -333,6 +392,89 @@ export type Database = {
         }
         Relationships: []
       }
+      user_achievements: {
+        Row: {
+          code: string
+          unlocked_at: string
+          user_id: string
+        }
+        Insert: {
+          code: string
+          unlocked_at?: string
+          user_id: string
+        }
+        Update: {
+          code?: string
+          unlocked_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_achievements_code_fkey"
+            columns: ["code"]
+            isOneToOne: false
+            referencedRelation: "achievements"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "user_achievements_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_stats: {
+        Row: {
+          coins_earned: number
+          correct_answers: number
+          messages_sent: number
+          news_read: number
+          perfect_rounds: number
+          purchases: number
+          quizzes_played: number
+          stickers_sent: number
+          updated_at: string
+          user_id: string
+          years_visited: number[]
+        }
+        Insert: {
+          coins_earned?: number
+          correct_answers?: number
+          messages_sent?: number
+          news_read?: number
+          perfect_rounds?: number
+          purchases?: number
+          quizzes_played?: number
+          stickers_sent?: number
+          updated_at?: string
+          user_id: string
+          years_visited?: number[]
+        }
+        Update: {
+          coins_earned?: number
+          correct_answers?: number
+          messages_sent?: number
+          news_read?: number
+          perfect_rounds?: number
+          purchases?: number
+          quizzes_played?: number
+          stickers_sent?: number
+          updated_at?: string
+          user_id?: string
+          years_visited?: number[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_stats_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       year_news: {
         Row: {
           created_at: string
@@ -360,12 +502,17 @@ export type Database = {
         Args: { choice: number; expected_position: number; session_id: string }
         Returns: Json
       }
+      check_achievements: { Args: never; Returns: string[] }
       equip_sonic_cosmetic: {
         Args: { item_id: string; kind: string }
         Returns: undefined
       }
       equip_sonic_title: {
         Args: { title_id_input: string }
+        Returns: undefined
+      }
+      record_stat: {
+        Args: { p_amount?: number; p_stat: string; p_year?: number }
         Returns: undefined
       }
       redeem_sonic_cosmetic: { Args: { item_id: string }; Returns: number }
