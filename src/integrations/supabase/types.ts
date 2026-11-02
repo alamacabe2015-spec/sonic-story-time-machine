@@ -427,10 +427,14 @@ export type Database = {
       }
       user_stats: {
         Row: {
+          chaos_played: number
           coins_earned: number
           correct_answers: number
+          easy_played: number
+          hard_played: number
           messages_sent: number
           news_read: number
+          normal_played: number
           perfect_rounds: number
           purchases: number
           quizzes_played: number
@@ -440,10 +444,14 @@ export type Database = {
           years_visited: number[]
         }
         Insert: {
+          chaos_played?: number
           coins_earned?: number
           correct_answers?: number
+          easy_played?: number
+          hard_played?: number
           messages_sent?: number
           news_read?: number
+          normal_played?: number
           perfect_rounds?: number
           purchases?: number
           quizzes_played?: number
@@ -453,10 +461,14 @@ export type Database = {
           years_visited?: number[]
         }
         Update: {
+          chaos_played?: number
           coins_earned?: number
           correct_answers?: number
+          easy_played?: number
+          hard_played?: number
           messages_sent?: number
           news_read?: number
+          normal_played?: number
           perfect_rounds?: number
           purchases?: number
           quizzes_played?: number

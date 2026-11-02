@@ -43,6 +43,13 @@
       "when": 1793616598799,
       "tag": "0005_achievements_and_push",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1793616634560,
+      "tag": "0006_achievement_modes",
+      "breakpoints": true
     }
   ]
 }
