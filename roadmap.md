@@ -9,7 +9,10 @@
 - [x] Juegos: test de preguntas e imágenes con monedas guardadas
 - [x] Tienda: canjear monedas por títulos y mostrarlos bajo el nombre
 - [x] Comprobar partida, compra y título equipado
-- [ ] Ampliar juegos con cuatro dificultades y más preguntas
-- [ ] Añadir colores, letras y avatares comprables y equipables
-- [ ] Verificar juegos, compras y apariencia guardada
-- [ ] Actualizar noticias automáticamente con la aplicación cerrada
+- [x] Ampliar juegos con cuatro dificultades y más preguntas
+- [x] Añadir colores, letras y avatares comprables y equipables
+- [x] Verificar juegos, compras y apariencia guardada
+- [ ] Noticias cada hora también con la app cerrada (quitar la de 15 min)
+- [ ] Notificación al móvil cuando haya una noticia nueva
+- [ ] Sección Logros: 51 logros, botón arriba a la derecha, aviso "Logro conseguido"
+- [ ] Verificar logros, notificaciones y actualización horaria
