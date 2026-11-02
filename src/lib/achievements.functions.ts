@@ -34,7 +34,7 @@ export const trackEvent = createServerFn({ method: "POST" })
     year: z.number().int().min(1991).max(2100).optional(),
   }))
   .handler(async ({ data: input, context }) => {
-    const { error } = await context.supabase.rpc("record_stat", { p_stat: input.stat, p_amount: input.amount ?? 1, p_year: input.year ?? null });
+    const { error } = await context.supabase.rpc("record_stat", { p_stat: input.stat, p_amount: input.amount ?? 1, p_year: input.year });
     if (error) throw new Error(error.message);
     const { data } = await context.supabase.rpc("check_achievements");
     return { unlocked: (data ?? []) as string[] };

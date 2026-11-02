@@ -31,9 +31,11 @@ export async function setupPush(userId: string): Promise<string> {
   const reg = await navigator.serviceWorker.register("/sw.js");
   const sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlB64ToBytes(VAPID_PUBLIC_KEY) as BufferSource });
   const keys = sub.toJSON().keys;
-  if (!keys?.p256dh || !keys?.auth) return "No se pudo activar en este dispositivo";
+  const p256dh = keys?.["p256dh"];
+  const auth = keys?.["auth"];
+  if (!p256dh || !auth) return "No se pudo activar en este dispositivo";
   await supabase.from("push_subscriptions").delete().eq("endpoint", sub.endpoint);
-  const { error } = await supabase.from("push_subscriptions").insert({ user_id: userId, endpoint: sub.endpoint, p256dh: keys.p256dh, auth: keys.auth });
+  const { error } = await supabase.from("push_subscriptions").insert({ user_id: userId, endpoint: sub.endpoint, p256dh, auth });
   if (error) return "No se pudo guardar la suscripción";
   return "¡Listo! Te avisaré cuando haya noticias nuevas";
 }
