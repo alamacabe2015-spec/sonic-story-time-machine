@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
-import { Clock, Coins, Gamepad2, Newspaper, ShoppingBag, User, Users } from "lucide-react";
+import { Clock, Coins, Gamepad2, Newspaper, ShoppingBag, Trophy, User, Users } from "lucide-react";
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { AuthScreen } from "@/components/sonic/AuthScreen";
@@ -13,6 +13,8 @@ import sonicFace from "@/assets/sonic-face.png";
 import { Button } from "@/components/ui/button";
 import { GamesTab } from "@/components/sonic/GamesTab";
 import { ShopTab } from "@/components/sonic/ShopTab";
+import { LogrosModal } from "@/components/sonic/LogrosModal";
+import { useAchievements } from "@/lib/use-achievements";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -50,6 +52,10 @@ function MainApp({ userId }: { userId: string }) {
   const [friendships, setFriendships] = useState<Friendship[]>([]);
   const [people, setPeople] = useState<Record<string, Profile>>({});
   const [coins, setCoins] = useState(0);
+  const [logros, setLogros] = useState(false);
+  const { refresh: refreshAchievements } = useAchievements();
+
+  useEffect(() => { void refreshAchievements(); }, [refreshAchievements]);
 
   const loadCoins = useCallback(() => {
     supabase.from("game_wallets").select("coins").eq("user_id", userId).maybeSingle().then(({ data }) => setCoins(data?.coins ?? 0));
@@ -103,15 +109,20 @@ function MainApp({ userId }: { userId: string }) {
         </div>
         <h1 className="text-2xl text-primary-foreground">SONIC NEWS</h1>
         <span className="ml-auto flex items-center gap-1 font-extrabold text-primary-foreground" aria-label={`${coins} monedas`}><Coins className="h-5 w-5 text-ring-gold" />{coins}</span>
+        <button onClick={() => setLogros(true)} aria-label="Logros" className="flex flex-col items-center gap-0.5 text-primary-foreground">
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-foreground/20"><Trophy className="h-5 w-5 text-ring-gold" /></span>
+          <span className="text-[10px] font-extrabold leading-none">Logros</span>
+        </button>
       </header>
       <main className="mx-auto max-w-xl p-4">
-        {tab === "news" && <NewsTab />}
+        {tab === "news" && <NewsTab userId={userId} />}
         {tab === "account" && <AccountTab profile={me} onChange={loadMe} />}
         {tab === "time" && <TimeMachineTab />}
         {tab === "friends" && <FriendsTab me={me} friendships={friendships} people={people} reload={loadFriends} />}
         {tab === "games" && <GamesTab coins={coins} onReward={loadCoins} onShop={() => setTab("shop")} />}
          {tab === "shop" && <ShopTab coins={coins} equipped={me.equipped_title ?? null} userId={userId} profile={me} onChange={() => { loadCoins(); loadMe(); loadFriends(); }} />}
       </main>
+      <LogrosModal open={logros} onClose={() => setLogros(false)} />
       <nav className="fixed bottom-0 inset-x-0 z-30 bg-card border-t-4 border-primary grid grid-cols-6 pb-[env(safe-area-inset-bottom)]">
         {tabs.map((t) => (
           <Button variant="ghost" key={t.id} onClick={() => setTab(t.id)} aria-label={t.label} aria-current={tab === t.id ? "page" : undefined}
