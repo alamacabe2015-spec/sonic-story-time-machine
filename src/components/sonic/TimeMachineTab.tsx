@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { getYearNews, type YearItem } from "@/lib/sonic.functions";
 import { yearsAvailable } from "@/lib/sonic";
+import { useAchievements } from "@/lib/use-achievements";
 
 export function TimeMachineTab() {
   const fetchYear = useServerFn(getYearNews);
@@ -9,10 +10,11 @@ export function TimeMachineTab() {
   const [items, setItems] = useState<YearItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
+  const { record } = useAchievements();
 
   async function travel(y: number) {
     setYear(y); setLoading(true); setErr(""); setItems([]);
-    try { setItems(await fetchYear({ data: { year: y } })); }
+    try { setItems(await fetchYear({ data: { year: y } })); void record("year_visited", { year: y }); }
     catch (e) { setErr(e instanceof Error ? e.message : "Error"); }
     setLoading(false);
   }

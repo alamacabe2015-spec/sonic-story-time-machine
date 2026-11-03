@@ -6,6 +6,7 @@ import { SONIC_STICKERS, normalizeUsername } from "@/lib/sonic";
 import { Avatar } from "./Avatar";
 import type { Friendship, Message, Profile } from "./types";
 import { ProfileName } from "./ProfileName";
+import { useAchievements } from "@/lib/use-achievements";
 
 type Props = { me: Profile; friendships: Friendship[]; people: Record<string, Profile>; reload: () => void };
 
@@ -15,11 +16,12 @@ export function FriendsTab({ me, friendships, people, reload }: Props) {
   const other = (f: Friendship) => people[f.requester === me.id ? f.addressee : f.requester];
   const friends = friendships.filter((f) => f.status === "accepted");
   const incoming = friendships.filter((f) => f.status === "pending" && f.addressee === me.id);
+  const { refresh } = useAchievements();
 
   if (chatWith) return <Chat me={me} friend={chatWith} onBack={() => setChatWith(null)} />;
 
   async function accept(f: Friendship) {
-    await supabase.from("friendships").update({ status: "accepted" }).eq("id", f.id); reload();
+    await supabase.from("friendships").update({ status: "accepted" }).eq("id", f.id); reload(); void refresh();
   }
   async function reject(f: Friendship) {
     await supabase.from("friendships").delete().eq("id", f.id); reload();
@@ -74,9 +76,10 @@ function AddFriend({ me, friendships, reload }: { me: Profile; friendships: Frie
   }, [q, me.id]);
 
   const status = (id: string) => friendships.find((f) => f.requester === id || f.addressee === id)?.status;
+  const { refresh } = useAchievements();
   async function send(p: Profile) {
     const { error } = await supabase.from("friendships").insert({ requester: me.id, addressee: p.id });
-    if (error) toast.error("No se pudo enviar"); else { toast.success(`Solicitud enviada a ${p.username}`); reload(); }
+    if (error) toast.error("No se pudo enviar"); else { toast.success(`Solicitud enviada a ${p.username}`); reload(); void refresh(); }
   }
   return (
     <div className="rounded-2xl bg-card p-4 space-y-2">
@@ -97,6 +100,7 @@ function Chat({ me, friend, onBack }: { me: Profile; friend: Profile; onBack: ()
   const [text, setText] = useState("");
   const [stickers, setStickers] = useState(false);
   const bottom = useRef<HTMLDivElement>(null);
+  const { record } = useAchievements();
 
   useEffect(() => {
     supabase.from("messages").select("*")
@@ -117,7 +121,11 @@ function Chat({ me, friend, onBack }: { me: Profile; friend: Profile; onBack: ()
     setText("");
     const { data, error } = await supabase.from("messages").insert({ sender: me.id, receiver: friend.id, content }).select().single();
     if (error) toast.error("No se pudo enviar");
-    else setMsgs((prev) => prev.some((x) => x.id === data.id) ? prev : [...prev, data]);
+    else {
+      setMsgs((prev) => prev.some((x) => x.id === data.id) ? prev : [...prev, data]);
+      void record("messages_sent");
+      if (SONIC_STICKERS.includes(content)) void record("stickers_sent");
+    }
   }
   const onlyEmoji = (s: string) => SONIC_STICKERS.includes(s);
 
