@@ -1,18 +1,13 @@
-# Sonic News roadmap
-- [x] Base de datos, cuentas por usuario
-- [x] Pantalla de bienvenida / crear cuenta / ya tengo cuenta (botón "Entrar")
-- [x] Sesión recordada (no volver a poner usuario y contraseña)
-- [x] Noticias en tiempo real
-- [x] Mi cuenta (foto, usuario, fecha, biografía, cambiar cuenta, borrar cuenta)
-- [x] Máquina del tiempo (1991 → año actual, noticias en español)
-- [x] Amigos y chat (solicitudes, punto rojo, chat con emojis Sonic)
-- [x] Juegos: test de preguntas e imágenes con monedas guardadas
-- [x] Tienda: canjear monedas por títulos y mostrarlos bajo el nombre
-- [x] Comprobar partida, compra y título equipado
-- [x] Ampliar juegos con cuatro dificultades y más preguntas
-- [x] Añadir colores, letras y avatares comprables y equipables
-- [x] Verificar juegos, compras y apariencia guardada
-- [ ] Noticias cada hora también con la app cerrada (quitar la de 15 min)
-- [ ] Notificación al móvil cuando haya una noticia nueva
-- [ ] Sección Logros: 51 logros, botón arriba a la derecha, aviso "Logro conseguido"
-- [ ] Verificar logros, notificaciones y actualización horaria
+# Roadmap — Sonic News
+
+## Hecho
+- [x] App base: auth con usuario, noticias reales, cuenta, máquina del tiempo, amigos y chat
+- [x] Juegos: test con 4 dificultades (Green Hill, Chemical Plant, Death Egg, Ciberespacio) y más preguntas
+- [x] Tienda: títulos, colores de nombre, letras y 16 avatares de personajes
+- [x] Noticias cada hora aunque la app esté cerrada (cron `sonic-news-hourly`)
+- [x] Notificaciones push al móvil/ordenador cuando hay noticia nueva (botón "Avisarme" en Noticias)
+- [x] 51 logros con botón de trofeo en la cabecera, aviso "¡Logro conseguido!" y logro Misterioso final
+
+## Pendiente
+- [ ] Publicar la app para llevar estos cambios al móvil
+- [ ] El usuario debe pulsar "Avisarme" en la app publicada y aceptar el permiso para recibir notificaciones

@@ -8,6 +8,7 @@ import type { Profile } from "./types";
 import { Avatar } from "./Avatar";
 import { ProfileName } from "./ProfileName";
 import { Button } from "@/components/ui/button";
+import { useAchievements } from "@/lib/use-achievements";
 
 export function AccountTab({ profile, onChange }: { profile: Profile; onChange: () => void }) {
   const [bio, setBio] = useState(profile.bio);
@@ -15,10 +16,11 @@ export function AccountTab({ profile, onChange }: { profile: Profile; onChange: 
   const [u, setU] = useState(""); const [p, setP] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const del = useServerFn(deleteMyAccount);
+  const { refresh } = useAchievements();
 
   async function save(fields: Partial<Profile>) {
     const { error } = await supabase.from("profiles").update(fields).eq("id", profile.id);
-    if (error) toast.error("No se pudo guardar"); else { toast.success("¡Guardado!"); onChange(); }
+    if (error) toast.error("No se pudo guardar"); else { toast.success("¡Guardado!"); onChange(); void refresh(); }
   }
 
   async function switchAccount(e: React.FormEvent) {

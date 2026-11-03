@@ -9,6 +9,7 @@ import { equipCosmetic, redeemCosmetic } from "@/lib/games.functions";
 import { AVATAR_IMAGES } from "@/lib/cosmetics";
 import { ProfileName } from "./ProfileName";
 import type { Profile } from "./types";
+import { useAchievements } from "@/lib/use-achievements";
 
 type Kind = "color" | "font" | "avatar";
 const field = { color: "name_color", font: "name_font", avatar: "avatar_cosmetic" } as const;
@@ -20,6 +21,7 @@ export function CosmeticsShop({ kind, coins, profile, onChange }: { kind: Kind; 
   const [loaded, setLoaded] = useState(false);
   const redeem = useServerFn(redeemCosmetic);
   const equip = useServerFn(equipCosmetic);
+  const { record, refresh } = useAchievements();
   async function load() {
     const [catalog, inventory] = await Promise.all([supabase.from("sonic_cosmetics").select("*").order("price"), supabase.from("owned_cosmetics").select("cosmetic_id").eq("user_id", profile.id)]);
     if (catalog.error || inventory.error) { setError(true); return; }
@@ -34,6 +36,7 @@ export function CosmeticsShop({ kind, coins, profile, onChange }: { kind: Kind; 
     try {
       if (mine) await equip({ data: { id: item.id, kind } }); else await redeem({ data: { id: item.id } });
       await load(); onChange(); toast.success("¡Premio equipado!");
+      if (!mine) void record("purchases"); void refresh();
     } catch (e) { toast.error(e instanceof Error ? e.message : "No se pudo guardar"); }
     finally { setBusy(false); }
   }

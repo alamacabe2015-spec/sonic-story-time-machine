@@ -9,6 +9,7 @@ import { equipTitle, redeemTitle } from "@/lib/games.functions";
 import { canRedeemTitle } from "@/lib/games";
 import { CosmeticsShop } from "./CosmeticsShop";
 import type { Profile } from "./types";
+import { useAchievements } from "@/lib/use-achievements";
 
 export function ShopTab({ coins, equipped, userId, profile, onChange }: { coins: number; equipped: string | null; userId: string; profile: Profile; onChange: () => void }) {
   const [category, setCategory] = useState<"titles" | "color" | "font" | "avatar">("titles");
@@ -20,6 +21,7 @@ export function ShopTab({ coins, equipped, userId, profile, onChange }: { coins:
   const [error, setError] = useState(false);
   const redeem = useServerFn(redeemTitle);
   const equip = useServerFn(equipTitle);
+  const { record, refresh } = useAchievements();
   async function load() {
     const [catalog, inventory] = await Promise.all([supabase.from("sonic_titles").select("*").order("price"), supabase.from("owned_titles").select("title_id").eq("user_id", userId)]);
     if (catalog.error || inventory.error) { setError(true); return; }
@@ -34,6 +36,7 @@ export function ShopTab({ coins, equipped, userId, profile, onChange }: { coins:
     try {
       if (alreadyOwned) await equip({ data: { id: t.id } }); else await redeem({ data: { id: t.id } });
       await load(); onChange(); toast.success(alreadyOwned ? "¡Título equipado!" : "¡Título comprado y equipado!");
+      if (!alreadyOwned) void record("purchases"); void refresh();
     } catch (e) { toast.error(e instanceof Error ? e.message : "No se pudo canjear"); }
     finally { setBusy(null); }
   }
