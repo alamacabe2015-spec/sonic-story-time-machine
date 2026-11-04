@@ -20,14 +20,14 @@ export function useAchievements() {
     try {
       const r = await track({ data: { stat, amount: opts?.amount, year: opts?.year } });
       await announce(r.unlocked);
-    } catch { /* los logros nunca interrumpen la app */ }
+    } catch { toast.error("No se pudieron comprobar tus logros. Vuelve a abrir la app para reintentarlo."); }
   }, [track, announce]);
 
   const refresh = useCallback(async () => {
     try {
       const r = await check();
       await announce(r.unlocked);
-    } catch { /* silencioso */ }
+    } catch { toast.error("No se pudieron comprobar tus logros. Vuelve a abrir la app para reintentarlo."); }
   }, [check, announce]);
 
   return { record, refresh };
