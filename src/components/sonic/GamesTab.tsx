@@ -37,11 +37,9 @@ export function GamesTab({ coins, onReward, onShop }: { coins: number; onReward:
       const result = await answer({ data: { sessionId: quiz.sessionId, position: quiz.position, choice } });
       setFeedback(result); setEarned((v) => v + (result.earned ?? 0)); onReward();
       if (!result.question) {
-        const totalEarned = earned + (result.earned ?? 0);
         void record("quizzes_played");
         void record(`${mode}_played`);
         if (result.correct) void record("correct_answers", { amount: result.correct });
-        if (totalEarned) void record("coins_earned", { amount: totalEarned });
         if (result.correct === result.total) void record("perfect_rounds");
       }
     } catch (e) { setSelected(null); toast.error(e instanceof Error ? e.message : "No se pudo guardar tu respuesta"); }

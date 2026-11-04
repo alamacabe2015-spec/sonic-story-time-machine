@@ -27,6 +27,12 @@ describe("achievement checks", () => {
     expect(rpc).toHaveBeenCalledWith("check_achievements");
   });
 
+  it("returns all three earned coin milestones for the 1345-coin case", async () => {
+    rpc.mockResolvedValue({ data: ["monedas-100", "monedas-500", "monedas-1000"], error: null });
+    const result = await (checkMyAchievements as unknown as Handler)({ context: { supabase: { rpc } } });
+    expect(result).toEqual({ unlocked: ["monedas-100", "monedas-500", "monedas-1000"] });
+  });
+
   it("does not report an award failure as successful event tracking", async () => {
     rpc.mockResolvedValueOnce({ error: null }).mockResolvedValueOnce({ data: null, error: { message: "award failed" } });
     await expect((trackEvent as unknown as Handler)({ data: { stat: "chaos_played" }, context: { supabase: { rpc } } })).rejects.toThrow("award failed");

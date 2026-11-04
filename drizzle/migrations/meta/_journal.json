@@ -57,6 +57,13 @@
       "when": 1793787049855,
       "tag": "0007_fix_achievement_array_append",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1793787501482,
+      "tag": "0008_recover_earned_coin_achievements",
+      "breakpoints": true
     }
   ]
 }

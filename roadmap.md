@@ -1,6 +1,7 @@
 # Roadmap — Sonic News
 
 ## Hecho
+- [x] Recuperar los logros por monedas ganadas usando el historial de respuestas guardadas
 - [x] Corregir el reparto de logros del reto perfecto de Caos y mostrar errores de comprobación
 - [x] App base: auth con usuario, noticias reales, cuenta, máquina del tiempo, amigos y chat
 - [x] Juegos: test con 4 dificultades (Green Hill, Chemical Plant, Death Egg, Ciberespacio) y más preguntas
