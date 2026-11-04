@@ -6,13 +6,13 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import { equipCosmetic, redeemCosmetic } from "@/lib/games.functions";
-import { AVATAR_IMAGES } from "@/lib/cosmetics";
+import { AVATAR_IMAGES, BACKGROUND_IMAGES } from "@/lib/cosmetics";
 import { ProfileName } from "./ProfileName";
 import type { Profile } from "./types";
 import { useAchievements } from "@/lib/use-achievements";
 
-type Kind = "color" | "font" | "avatar";
-const field = { color: "name_color", font: "name_font", avatar: "avatar_cosmetic" } as const;
+type Kind = "color" | "font" | "avatar" | "background";
+const field = { color: "name_color", font: "name_font", avatar: "avatar_cosmetic", background: "background_cosmetic" } as const;
 export function CosmeticsShop({ kind, coins, profile, onChange }: { kind: Kind; coins: number; profile: Profile; onChange: () => void }) {
   const [items, setItems] = useState<Tables<"sonic_cosmetics">[]>([]);
   const [owned, setOwned] = useState<string[]>([]);
@@ -46,7 +46,7 @@ export function CosmeticsShop({ kind, coins, profile, onChange }: { kind: Kind; 
       const mine = owned.includes(item.id); const active = profile[field[kind]] === item.id;
       const preview = { ...profile, [field[kind]]: item.id };
       return <article key={item.id} className={`flex flex-col gap-3 rounded-lg border-2 bg-card p-3 min-w-0 ${item.rarity === "Legendario" ? "border-ring-gold" : "border-border"}`}>
-        {kind === "avatar" ? <img src={AVATAR_IMAGES[item.id]} alt={item.name} width={256} height={256} loading="lazy" className="aspect-square w-full rounded-lg object-cover" /> : <div className="flex min-h-20 items-center justify-center text-center"><ProfileName profile={preview} className="text-lg font-extrabold" /></div>}
+        {kind === "background" ? <img src={BACKGROUND_IMAGES[item.id]} alt={item.name} width={1536} height={864} loading="lazy" className="aspect-video w-full rounded-lg object-cover" /> : kind === "avatar" ? <img src={AVATAR_IMAGES[item.id]} alt={item.name} width={256} height={256} loading="lazy" className="aspect-square w-full rounded-lg object-cover" /> : <div className="flex min-h-20 items-center justify-center text-center"><ProfileName profile={preview} className="text-lg font-extrabold" /></div>}
         <span className="text-xs font-bold text-muted-foreground">{item.rarity}</span><h3 className="text-sm flex-1 break-words">{item.name}</h3>
         <Button variant={mine ? "outline" : "secondary"} className="h-auto min-h-10 w-full whitespace-normal text-xs px-2" disabled={busy || active || (!mine && coins < item.price)} onClick={() => select(item)}>{active ? <><Check />Equipado</> : mine ? <><Sparkles />Equipar</> : <><Coins />{item.price}</>}</Button>
         {!mine && coins < item.price && <p className="text-xs text-muted-foreground">Faltan {item.price - coins} monedas</p>}
