@@ -42,7 +42,7 @@ export const redeemCosmetic = createServerFn({ method: "POST" }).middleware([req
     return result.data;
   });
 export const equipCosmetic = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth])
-  .inputValidator(z.object({ id: z.string().nullable(), kind: z.enum(["color", "font", "avatar"]) }))
+  .inputValidator(z.object({ id: z.string().nullable(), kind: z.enum(["color", "font", "avatar", "background"]) }))
   .handler(async ({ data, context }) => {
     const result = await context.supabase.rpc("equip_sonic_cosmetic", { item_id: data.id as string, kind: data.kind });
     if (result.error) throw new Error(result.error.message);

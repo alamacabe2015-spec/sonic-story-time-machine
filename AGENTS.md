@@ -17,6 +17,7 @@
 - Games and shop use separate Sonic tab components; equipped titles are read from profiles so account, friend lists and chats display the same selection.
 - Quiz sessions persist their difficulty and per-answer reward server-side; the client never determines payouts.
 - Cosmetics are protected purchases with ownership validation on profile updates; shared Avatar and ProfileName rendering keeps appearances consistent.
+- Account backgrounds reuse protected cosmetic inventory and equip RPCs; local image mappings supply previews and the account cover without exposing editable asset URLs.
 - News ingestion is shared in a server-only helper by authenticated refresh and a cron-authenticated public route, so scheduled updates do not depend on an open browser.
 - Achievement RPCs must append scalar codes with array_append and propagate check errors, so PostgreSQL never parses a code as an array or silently loses award failures.
 - Coin achievements reconcile total earnings from protected quiz sessions and wallet balances during checks, not client-submitted round totals, so spent coins and abandoned rounds still count without duplicate increments.

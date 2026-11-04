@@ -12,7 +12,7 @@ import type { Profile } from "./types";
 import { useAchievements } from "@/lib/use-achievements";
 
 export function ShopTab({ coins, equipped, userId, profile, onChange }: { coins: number; equipped: string | null; userId: string; profile: Profile; onChange: () => void }) {
-  const [category, setCategory] = useState<"titles" | "color" | "font" | "avatar">("titles");
+  const [category, setCategory] = useState<"titles" | "color" | "font" | "avatar" | "background">("titles");
   const [titles, setTitles] = useState<Tables<"sonic_titles">[]>([]);
   const [owned, setOwned] = useState<string[]>([]);
   const [filter, setFilter] = useState("Todos");
@@ -43,7 +43,7 @@ export function ShopTab({ coins, equipped, userId, profile, onChange }: { coins:
   const visible = titles.filter((t) => filter === "Todos" || (filter === "Mis títulos" ? owned.includes(t.id) : t.character === filter));
   return <section className="space-y-4">
     <div className="flex justify-between items-center"><h2 className="text-2xl text-primary">Tienda</h2><span className="flex gap-2 font-extrabold"><Coins className="text-ring-gold" />{coins}</span></div>
-    <div className="grid grid-cols-4 gap-1" role="tablist" aria-label="Premios">{([{ id: "titles", label: "Títulos" }, { id: "color", label: "Colores" }, { id: "font", label: "Letras" }, { id: "avatar", label: "Avatares" }] as const).map((c) => <Button key={c.id} role="tab" aria-selected={category === c.id} variant={category === c.id ? "secondary" : "outline"} className="px-1 text-xs" onClick={() => setCategory(c.id)}>{c.label}</Button>)}</div>
+    <div className="grid grid-cols-5 gap-1" role="tablist" aria-label="Premios">{([{ id: "titles", label: "Títulos" }, { id: "color", label: "Colores" }, { id: "font", label: "Letras" }, { id: "avatar", label: "Avatares" }, { id: "background", label: "Fondos" }] as const).map((c) => <Button key={c.id} role="tab" aria-selected={category === c.id} variant={category === c.id ? "secondary" : "outline"} className="px-1 text-xs" onClick={() => setCategory(c.id)}>{c.label}</Button>)}</div>
     {category !== "titles" ? <CosmeticsShop kind={category} coins={coins} profile={profile} onChange={onChange} /> : <>
     <p className="text-sm text-muted-foreground">Títulos inspirados en los personajes de Sonic; no son citas oficiales.</p>
     {equipped && <div className="border-b-2 border-ring-gold py-3"><p className="text-xs font-bold text-muted-foreground">Tu título</p><p className="font-extrabold text-primary flex items-center gap-2"><Sparkles className="h-4 w-4" />{equipped}</p><Button variant="link" className="px-0" disabled={!!busy} onClick={async () => { setBusy("remove"); try { await equip({ data: { id: null } }); onChange(); } catch { toast.error("No se pudo quitar"); } finally { setBusy(null); } }}>Quitar título</Button></div>}

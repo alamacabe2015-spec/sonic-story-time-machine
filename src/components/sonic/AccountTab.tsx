@@ -9,6 +9,7 @@ import { Avatar } from "./Avatar";
 import { ProfileName } from "./ProfileName";
 import { Button } from "@/components/ui/button";
 import { useAchievements } from "@/lib/use-achievements";
+import { BACKGROUND_IMAGES } from "@/lib/cosmetics";
 
 export function AccountTab({ profile, onChange }: { profile: Profile; onChange: () => void }) {
   const [bio, setBio] = useState(profile.bio);
@@ -40,6 +41,7 @@ export function AccountTab({ profile, onChange }: { profile: Profile; onChange: 
   return (
     <div className="space-y-5">
       <h2 className="text-2xl text-primary">Mi cuenta</h2>
+      {profile.background_cosmetic && BACKGROUND_IMAGES[profile.background_cosmetic] && <img src={BACKGROUND_IMAGES[profile.background_cosmetic]} alt="Tu fondo de cuenta" width={1536} height={864} className="aspect-video w-full rounded-lg object-cover" />}
       <div className="rounded-2xl bg-card p-5 flex flex-col items-center gap-2">
         <Button variant="ghost" className="h-auto rounded-full p-0" onClick={() => fileRef.current?.click()} aria-label="Cambiar foto"><Avatar profile={profile} size="xl" /></Button>
         <input ref={fileRef} type="file" accept="image/*" hidden
