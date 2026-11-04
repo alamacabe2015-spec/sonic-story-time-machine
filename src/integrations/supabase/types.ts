@@ -203,6 +203,7 @@ export type Database = {
         Row: {
           avatar_cosmetic: string | null
           avatar_url: string | null
+          background_cosmetic: string | null
           bio: string
           created_at: string
           display_name: string
@@ -215,6 +216,7 @@ export type Database = {
         Insert: {
           avatar_cosmetic?: string | null
           avatar_url?: string | null
+          background_cosmetic?: string | null
           bio?: string
           created_at?: string
           display_name?: string
@@ -227,6 +229,7 @@ export type Database = {
         Update: {
           avatar_cosmetic?: string | null
           avatar_url?: string | null
+          background_cosmetic?: string | null
           bio?: string
           created_at?: string
           display_name?: string

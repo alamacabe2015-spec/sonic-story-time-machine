@@ -64,6 +64,13 @@
       "when": 1793787501482,
       "tag": "0008_recover_earned_coin_achievements",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1793787852259,
+      "tag": "0009_profile_background_cosmetics",
+      "breakpoints": true
     }
   ]
 }
