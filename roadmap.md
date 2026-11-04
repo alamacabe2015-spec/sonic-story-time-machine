@@ -11,5 +11,6 @@
 - [x] 51 logros con botón de trofeo en la cabecera, aviso "¡Logro conseguido!" y logro Misterioso final
 
 ## Pendiente
+- [ ] Añadir fondos comprables y equipables en Mi cuenta y verificar la compra
 - [ ] Publicar la app para llevar estos cambios al móvil
 - [ ] El usuario debe pulsar "Avisarme" en la app publicada y aceptar el permiso para recibir notificaciones
