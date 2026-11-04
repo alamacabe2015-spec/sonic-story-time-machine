@@ -1,6 +1,7 @@
 # Roadmap — Sonic News
 
 ## Hecho
+- [x] Corregir el reparto de logros del reto perfecto de Caos y mostrar errores de comprobación
 - [x] App base: auth con usuario, noticias reales, cuenta, máquina del tiempo, amigos y chat
 - [x] Juegos: test con 4 dificultades (Green Hill, Chemical Plant, Death Egg, Ciberespacio) y más preguntas
 - [x] Tienda: títulos, colores de nombre, letras y 16 avatares de personajes

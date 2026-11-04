@@ -12,6 +12,7 @@ export const getAchievements = createServerFn({ method: "POST" })
       context.supabase.from("user_achievements").select("code, unlocked_at"),
     ]);
     if (catalog.error) throw new Error("No se pudieron cargar los logros");
+    if (mine.error) throw new Error("No se pudieron cargar tus logros conseguidos");
     const unlocked = new Map((mine.data ?? []).map((r) => [r.code, r.unlocked_at]));
     return (catalog.data ?? []).map((a) => ({ ...a, unlocked_at: unlocked.get(a.code) ?? null })) as Achievement[];
   });
@@ -36,6 +37,7 @@ export const trackEvent = createServerFn({ method: "POST" })
   .handler(async ({ data: input, context }) => {
     const { error } = await context.supabase.rpc("record_stat", { p_stat: input.stat, p_amount: input.amount ?? 1, ...(input.year !== undefined ? { p_year: input.year } : {}) });
     if (error) throw new Error(error.message);
-    const { data } = await context.supabase.rpc("check_achievements");
+    const { data, error: checkError } = await context.supabase.rpc("check_achievements");
+    if (checkError) throw new Error(checkError.message);
     return { unlocked: (data ?? []) as string[] };
   });
